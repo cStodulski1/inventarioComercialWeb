@@ -5,14 +5,14 @@
 			description="Aplicação para gerenciar catálogos de mercadorias"
 			:links="[{
 				label: 'Categorias',
-				to: '/categorias',
+				to: '/categorias/listar',
 				target: '_blank',
 				color: 'neutral',
 				icon: 'i-lucide-layout-grid',
 				size: 'xl',
 			}, {
 				label: 'Produtos',
-				to: '/produtos',
+				to: '/produtos/listar',
 				target: '_blank',
 				icon: 'i-lucide-package',
 				size: 'xl',

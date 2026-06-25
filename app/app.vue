@@ -4,9 +4,14 @@
 			<NavBar />
 		</UHeader>
 		<UMain>
-			<NuxtPage />
+			<NuxtLayout>
+				<NuxtPage />
+			</NuxtLayout>
 		</UMain>
 
-		<USeparator icon="i-simple-icons-nuxtdotjs" />
+		<USeparator
+			icon="i-simple-icons-nuxtdotjs"
+			class="pt-8"
+		/>
 	</UApp>
 </template>
