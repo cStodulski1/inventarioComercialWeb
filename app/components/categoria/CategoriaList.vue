@@ -16,7 +16,7 @@ defineProps<{
 				v-for="categoria in categorias"
 				:key="categoria.id"
 				:title="categoria.nome"
-				:description="categoria.descricao !== '' ? categoria.descricao : 'Categoria sem descrição*'"
+				:description="categoria.descricao !== '' ? categoria.descricao : 'Categoria SEM descrição'"
 
 				:ui="{ wrapper: 'flex flex-col flex-1 items-stretch' }"
 			>
