@@ -1,60 +1,51 @@
 <script setup lang="ts">
-import type { FormSubmitEvent } from "@nuxt/ui";
 import { useCategorias } from "~/composables/useCategorias";
-import { _createCategoriaSchema, type CreateCategoriaRequest } from "~~/shared/types/categorias/create-categoria-request";
+import { _createAndUpdateCategoriaSchema, type CreateUpdateCategoriaRequest } from "~~/shared/types/categorias/create-update-categoria-request";
+import { FetchError } from "ofetch";
 
 const { create } = useCategorias();
 
-const state = reactive<Partial<CreateCategoriaRequest>>({
+const state = reactive<Partial<CreateUpdateCategoriaRequest>>({
 	nome: "",
 	descricao: "",
 });
 
 const toast = useToast();
-async function onSubmit(event: FormSubmitEvent<CreateCategoriaRequest>) {
-	const response = await create(event.data);
-	toast.add({ title: "Nova Categoria criada pela API", description: response.isSuccess.toString() });
-	// toast.add({ title: "Sucesso", description: response.data.nome, color: "success" });
+async function criarCategoria(data: CreateUpdateCategoriaRequest) {
+	try {
+		const response = await create(data);
+		toast.add({
+			title: "Categoria criada com sucesso",
+			description: `Nome: ${response.data.nome}`,
+			color: "success",
+			icon: "i-lucide-circle-check",
+
+		});
+		state.nome = "";
+		state.descricao = "";
+	}
+	catch (err) {
+		if (err instanceof FetchError) {
+			const errorMessage = err.data.statusMessage;
+			toast.add({
+				title: "Erro ao criar categoria",
+				description: `Erro: ${errorMessage}`,
+				color: "error",
+				icon: "i-lucide-circle-x",
+			});
+		}
+		else {
+			toast.add({ title: "Erro desconhecido", color: "error" });
+		}
+	}
 }
 </script>
 
 <template>
 	<UContainer>
-		<UForm
-			:schema="_createCategoriaSchema"
-			:state="state"
-			class="space-y-4"
-			@submit.prevent="onSubmit"
-		>
-			<UFormField
-				label="Nome"
-				name="nome"
-			>
-				<UInput
-					v-model="state.nome"
-					class="w-full"
-				/>
-			</UFormField>
-
-			<UFormField
-				label="Descricao"
-				name="descricao"
-			>
-				<UTextarea
-					v-model="state.descricao"
-					:maxlength="500"
-					class="w-full"
-				/>
-			</UFormField>
-
-			<div class="flex justify-end">
-				<UButton
-					type="submit"
-					icon="i-lucide-save"
-				>
-					Salvar
-				</UButton>
-			</div>
-		</UForm>
+		<CategoriaForm
+			v-model="state"
+			@submit="criarCategoria"
+		/>
 	</UContainer>
 </template>

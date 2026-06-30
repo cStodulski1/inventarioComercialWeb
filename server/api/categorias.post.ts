@@ -1,23 +1,24 @@
 import { FetchError } from "ofetch";
-import { _createCategoriaSchema, type CreateCategoriaRequest } from "~~/shared/types/categorias/create-categoria-request";
+import { _createAndUpdateCategoriaSchema, type CreateUpdateCategoriaRequest } from "~~/shared/types/categorias/create-update-categoria-request";
 import type { ApiResponse } from "#shared/types/api-response";
+import type { Categoria } from "~~/shared/types/categorias/categoria";
 
 export default defineEventHandler<EventHandlerRequest>(async (event) => {
 	const config = useRuntimeConfig();
 	const url = `${config.public.apiBaseUrl}/api/categorias`;
 
 	try {
-		const body = await readBody<CreateCategoriaRequest>(event);
-		const result = _createCategoriaSchema.safeParse(body);
+		const body = await readBody<CreateUpdateCategoriaRequest>(event);
+		const result = _createAndUpdateCategoriaSchema.safeParse(body);
 		if (!result.success) {
 			throw createError({
 				statusCode: 400,
-				statusMessage: "Bad Request",
+				statusText: "Bad Request",
 				data: result.error.message,
 			});
 		}
 
-		const response = await $fetch(url, {
+		const response = await $fetch<ApiResponse<Categoria>>(url, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -32,11 +33,10 @@ export default defineEventHandler<EventHandlerRequest>(async (event) => {
 	}
 	catch (error: unknown) {
 		if (error instanceof FetchError) {
-			const backendError = error.data as ApiResponse<null> | undefined;
 			throw createError({
 				statusCode: error.status || 500,
-				statusMessage: backendError?.message,
-				data: backendError?.data,
+				statusText: error.data.message,
+				data: error.data,
 			});
 		}
 

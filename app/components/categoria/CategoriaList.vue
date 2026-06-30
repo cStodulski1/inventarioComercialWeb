@@ -26,11 +26,13 @@ defineProps<{
 							icon="i-lucide-edit"
 							size="md"
 							color="info"
+							class="cursor-pointer"
 						/>
 						<UButton
 							icon="i-lucide-trash"
 							size="md"
 							color="error"
+							class="cursor-pointer"
 						/>
 					</div>
 				</template>
