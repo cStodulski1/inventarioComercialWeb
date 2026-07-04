@@ -16,5 +16,11 @@ export const useCategorias = () => {
 		});
 	};
 
-	return { create, update };
+	const remove = async (id: string | undefined) => {
+		return await $fetch(`/api/categorias/${id}`, {
+			method: "DELETE",
+		});
+	};
+
+	return { create, update, remove };
 };

@@ -14,9 +14,31 @@ const { data: response, refresh } = await useFetch<ApiResponse<PaginatedResult<C
 });
 
 const toast = useToast();
-const { update } = useCategorias();
+const { update, remove } = useCategorias();
 
-async function testeEmit(data: CreateUpdateCategoriaRequest) {
+async function deletarCategoria(id: string | undefined) {
+	try {
+		await remove(id);
+		toast.add({ title: "Categoria excluída!", description: id, icon: "i-lucide-circle-check" });
+		refresh();
+	}
+	catch (err) {
+		if (err instanceof FetchError) {
+			const errorMessage = err.data.statusMessage;
+			toast.add({
+				title: "Erro ao excluir categoria",
+				description: `Erro: ${errorMessage}`,
+				color: "error",
+				icon: "i-lucide-circle-x",
+			});
+		}
+		else {
+			toast.add({ title: "Erro desconhecido", color: "error" });
+		}
+	}
+}
+
+async function editarCategoria(data: CreateUpdateCategoriaRequest) {
 	try {
 		const response = await update(data);
 		toast.add({ title: "Categoria atualizada!", description: response.data.id, color: "success", icon: "i-lucide-circle-check" });
@@ -52,7 +74,8 @@ async function testeEmit(data: CreateUpdateCategoriaRequest) {
 		</div>
 		<CategoriaList
 			:categorias="response?.data.items ?? []"
-			@edit="testeEmit"
+			@edit="editarCategoria"
+			@delete="deletarCategoria"
 		/>
 		<div class="flex justify-center mt-4">
 			<UPagination

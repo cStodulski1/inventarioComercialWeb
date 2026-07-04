@@ -2,7 +2,8 @@
 import type { Categoria } from "~~/shared/types/categorias/categoria";
 import type { CreateUpdateCategoriaRequest } from "~~/shared/types/categorias/create-update-categoria-request";
 
-const isOpen = ref(false);
+const isEditModalOpen = ref(false);
+const isDeleteModalOpen = ref(false);
 
 const state = reactive<CreateUpdateCategoriaRequest>({
 	nome: "",
@@ -15,7 +16,15 @@ function abrirModalEditarCategoria(categoria: Categoria) {
 	state.descricao = categoria.descricao ?? "";
 	state.id = categoria.id;
 
-	isOpen.value = true;
+	isEditModalOpen.value = true;
+}
+
+function abrirModalDeletarCategoria(categoria: Categoria) {
+	state.nome = categoria.nome;
+	state.descricao = categoria.descricao ?? "";
+	state.id = categoria.id;
+
+	isDeleteModalOpen.value = true;
 }
 
 defineProps<{
@@ -25,12 +34,17 @@ defineProps<{
 
 const emit = defineEmits<{
 	edit: [updateCategoria: CreateUpdateCategoriaRequest];
-	delete: [id: string];
+	delete: [id: string | undefined];
 }>();
 
 function editarCategoria(data: CreateUpdateCategoriaRequest) {
 	emit("edit", data);
-	isOpen.value = false;
+	isEditModalOpen.value = false;
+}
+
+function deletarCategoria(id: string | undefined) {
+	emit("delete", id);
+	isDeleteModalOpen.value = false;
 }
 </script>
 
@@ -63,6 +77,7 @@ function editarCategoria(data: CreateUpdateCategoriaRequest) {
 								size="md"
 								color="error"
 								class="cursor-pointer"
+								@click="abrirModalDeletarCategoria(categoria)"
 							/>
 						</div>
 					</slot>
@@ -80,7 +95,7 @@ function editarCategoria(data: CreateUpdateCategoriaRequest) {
 		</UPageList>
 	</UContainer>
 	<UModal
-		v-model:open="isOpen"
+		v-model:open="isEditModalOpen"
 		title="Editar Categoria"
 		:ui="{ footer: 'justify-end' }"
 	>
@@ -93,7 +108,7 @@ function editarCategoria(data: CreateUpdateCategoriaRequest) {
 							color="neutral"
 							variant="outline"
 							class="cursor-pointer"
-							@click="() => { isOpen = false }"
+							@click="() => { isEditModalOpen = false }"
 						/>
 						<UButton
 							label="Editar"
@@ -105,6 +120,34 @@ function editarCategoria(data: CreateUpdateCategoriaRequest) {
 					</div>
 				</template>
 			</CategoriaForm>
+		</template>
+	</UModal>
+	<UModal
+		v-model:open="isDeleteModalOpen"
+		title="Excluir Categoria"
+		:ui="{ footer: 'justify-end' }"
+	>
+		<template #body>
+			<UAlert
+				color="error"
+				title="Tem certeza ?"
+				description="Essa ação não pode ser desfeita!"
+				icon="i-lucide-trash"
+			/>
+		</template>
+		<template #footer>
+			<div class="flex gap-2">
+				<UButton
+					color="neutral"
+					label="Cancelar"
+					@click="() => { isDeleteModalOpen = false }"
+				/>
+				<UButton
+					label="Excluir"
+					color="error"
+					@click="deletarCategoria(state.id)"
+				/>
+			</div>
 		</template>
 	</UModal>
 </template>
