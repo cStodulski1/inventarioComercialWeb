@@ -19,7 +19,6 @@ async function criarCategoria(data: CreateUpdateCategoriaRequest) {
 			description: `Nome: ${response.data.nome}`,
 			color: "success",
 			icon: "i-lucide-circle-check",
-
 		});
 		state.nome = "";
 		state.descricao = "";

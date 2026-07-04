@@ -9,5 +9,12 @@ export const useCategorias = () => {
 		});
 	};
 
-	return { create };
+	const update = async (categoriaData: CreateUpdateCategoriaRequest) => {
+		return await $fetch<ApiResponse<Categoria>>("/api/categorias", {
+			method: "PUT",
+			body: categoriaData,
+		});
+	};
+
+	return { create, update };
 };

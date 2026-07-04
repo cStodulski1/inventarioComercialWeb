@@ -41,16 +41,21 @@ function onSubmit(event: FormSubmitEvent<CreateUpdateCategoriaRequest>) {
 				:maxlength="500"
 				class="w-full"
 			/>
+			<template #hint>
+				<span class="text-xs text-muted">{{ state.descricao?.length ?? 0 }}/500</span>
+			</template>
 		</UFormField>
 
 		<div class="flex justify-end">
-			<UButton
-				type="submit"
-				icon="i-lucide-save"
-				class="cursor-pointer"
-			>
-				Salvar
-			</UButton>
+			<slot name="actions">
+				<UButton
+					type="submit"
+					icon="i-lucide-save"
+					class="cursor-pointer"
+				>
+					Salvar
+				</UButton>
+			</slot>
 		</div>
 	</UForm>
 </template>
