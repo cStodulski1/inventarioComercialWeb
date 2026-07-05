@@ -6,17 +6,15 @@
 			:links="[{
 				label: 'Categorias',
 				to: '/categorias/listar',
-				target: '_blank',
 				color: 'neutral',
 				icon: 'i-lucide-layout-grid',
 				size: 'xl',
 			}, {
 				label: 'Produtos',
 				to: '/produtos/listar',
-				target: '_blank',
+				color: 'neutral',
 				icon: 'i-lucide-package',
 				size: 'xl',
-				color: 'neutral',
 			}]"
 		/>
 
