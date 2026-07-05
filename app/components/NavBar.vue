@@ -9,7 +9,7 @@ const items = ref<NavigationMenuItem[]>([
 			{
 				label: "Cadastrar",
 				icon: "i-lucide-plus",
-				to: "/cateogrias/criar",
+				to: "/categorias/criar",
 			},
 			{
 				label: "Listar",
