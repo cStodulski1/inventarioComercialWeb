@@ -6,6 +6,10 @@ const state = defineModel<Partial<CreateUpdateCategoriaRequest>>({
 	required: true,
 });
 
+const campoNomeEhValido = computed(() => {
+	return _createAndUpdateCategoriaSchema.shape.nome.safeParse(state.value.nome).success;
+});
+
 const emit = defineEmits<{
 	submit: [CreateUpdateCategoriaRequest];
 }>();
@@ -49,6 +53,7 @@ function onSubmit(event: FormSubmitEvent<CreateUpdateCategoriaRequest>) {
 		<div class="flex justify-end">
 			<slot name="actions">
 				<UButton
+					:disabled="!campoNomeEhValido"
 					type="submit"
 					icon="i-lucide-save"
 					class="cursor-pointer"

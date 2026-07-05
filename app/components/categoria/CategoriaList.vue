@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Categoria } from "~~/shared/types/categorias/categoria";
-import type { CreateUpdateCategoriaRequest } from "~~/shared/types/categorias/create-update-categoria-request";
+import { _createAndUpdateCategoriaSchema, type CreateUpdateCategoriaRequest } from "~~/shared/types/categorias/create-update-categoria-request";
 
 const isEditModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
@@ -9,6 +9,10 @@ const state = reactive<CreateUpdateCategoriaRequest>({
 	nome: "",
 	descricao: "",
 	id: "",
+});
+
+const campoNomeEhValido = computed(() => {
+	return _createAndUpdateCategoriaSchema.shape.nome.safeParse(state.nome).success;
 });
 
 function abrirModalEditarCategoria(categoria: Categoria) {
@@ -111,6 +115,7 @@ function deletarCategoria(id: string | undefined) {
 							@click="() => { isEditModalOpen = false }"
 						/>
 						<UButton
+							:disabled="!campoNomeEhValido"
 							label="Editar"
 							icon="i-lucide-edit"
 							color="info"
